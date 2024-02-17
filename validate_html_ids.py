@@ -13,6 +13,8 @@ parser.add_argument('FILE', nargs='+',
                     help='one or more filenames or globs')
 parser.add_argument('-r', '--recursive', action='store_true',
                     help='search in any subfolders as well')
+parser.add_argument('-s', '--strict', action='store_true',
+                    help='HTML 4.01 restrictions on valid values')
 encodings = parser.add_mutually_exclusive_group()
 encodings.add_argument('-a', action='store_true',
                        help='encoding: ANSI (Windows only)')
@@ -24,8 +26,12 @@ encodings.add_argument('-u', action='store_true',
 args = parser.parse_args()
 
 regex_id_attribute = re.compile(r'id="([^"]+)"')
-# https://html.spec.whatwg.org/multipage/dom.html#the-id-attribute
-regex_valid_html_id = re.compile(r'^[^\s]+$')
+if args.strict:
+  # https://www.w3.org/TR/html401/types.html#type-name
+  regex_valid_html_id = re.compile(r'^[Z-Za-z][A-Za-z0-9_:\-\.]*$')
+else:
+  # https://html.spec.whatwg.org/multipage/dom.html#the-id-attribute
+  regex_valid_html_id = re.compile(r'^[^\s]+$')
 
 if args.recursive:
   prefix = f"**{'' if args.FILE[0] == '/' else '/'}"
