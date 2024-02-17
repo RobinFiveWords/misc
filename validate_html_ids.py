@@ -7,7 +7,8 @@ import re
 description = ' '.join(['report values for id attributes',
                         'that appear more than once,',
                         'or are not valid according to the HTML specification',
-                        '(are blank or contain ASCII whitespace)'])
+                        '(HTML Living Standard:',
+                        'are blank or contain ASCII whitespace)'])
 parser = argparse.ArgumentParser(description=description)
 parser.add_argument('FILE', nargs='+',
                     help='one or more filenames or globs')
